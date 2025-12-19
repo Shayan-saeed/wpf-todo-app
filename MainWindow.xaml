@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:WPFDemo"
+        xmlns:rotation="clr-namespace:RotationControlLib;assembly=RotationControlLib"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="WPFDemo.MainWindow"
         Title="MainWindow"
         Height="520" 
@@ -9,7 +10,7 @@
         Background="#F5F6F8"
         WindowStartupLocation="CenterScreen">
 
-    <Window.Resources>
+    <!--<Window.Resources>
         <Style x:Key="FilterButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="LightGray" />
             <Setter Property="Foreground" Value="DarkSlateGray" />
@@ -37,15 +38,24 @@
                 </Setter.Value>
             </Setter>
         </Style>
-    </Window.Resources>
-    
+    </Window.Resources>-->
+
     <Window.DataContext>
         <local:MainViewModel />
     </Window.DataContext>
 
-    <Grid Margin="40">
-        
-        <Border Background="White" CornerRadius="14" Padding="24">
+
+    <!--<StackPanel Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <rotation:RotationControl 
+            Value="{Binding SomeAngle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+            Width="260" Height="320"/>-->
+        <!--<TextBox Text="{Binding SomeAngle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+             Width="120" 
+             HorizontalAlignment="Center" 
+             Margin="12"/>-->
+
+
+        <!--<Border Background="White" CornerRadius="14" Padding="24">
             <StackPanel>
                 <TextBlock 
                     Text="My Tasks"
@@ -53,6 +63,8 @@
                     FontWeight="SemiBold"
                     Margin="0,0,0,20"
                     Foreground="#1F2937"/>
+
+                
 
                 <Border
                     Background="#F3F4F6"
@@ -109,7 +121,7 @@
                 </ListBox>
                 <DockPanel>
 
-                    <!-- Delete Completed -->
+                    --><!-- Delete Completed --><!--
                     <Button
                         Content="Delete completed"
                         Command="{Binding DeleteCompletedCommand}"
@@ -119,7 +131,7 @@
                         Cursor="Hand"
                         DockPanel.Dock="Left"/>
 
-                    <!-- Filters -->
+                    --><!-- Filters --><!--
                     <StackPanel
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
@@ -142,8 +154,64 @@
                     </StackPanel>
                 </DockPanel>
             </StackPanel>
-        </Border>
+        </Border>-->
         
 
+    <!--</StackPanel>-->
+    <!--<Grid Margin="40">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock
+        Text="Rotate Control Demo"
+        FontSize="24"
+        HorizontalAlignment="Center"
+        Margin="0,0,0,20"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <local:CardControl Grid.Column="0" Title="A" CardBackground="Black" FontColor="White"/>
+            <local:CardControl Grid.Column="1" Title="B" CardBackground="Gold" FontColor="Black"/>
+            <local:CardControl Grid.Column="2" Title="C" CardBackground="Gray" FontColor="White"/>
+
+        </Grid>
+    </Grid>-->
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" 
+                   Text="SYSTEM DASHBOARD" 
+                   FontSize="24" 
+                   HorizontalAlignment="Center"/>
+        <Grid Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <ItemsControl ItemsSource="{Binding Cards}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:StatCards />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </Grid>
     </Grid>
+
 </Window>

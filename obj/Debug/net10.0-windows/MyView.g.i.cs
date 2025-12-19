@@ -60,7 +60,7 @@ namespace WPFDemo {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/WPFDemo;component/myview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/WPFDemo;V1.0.0.0;component/myview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\MyView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

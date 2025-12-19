@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="WPFDemo.StatCards"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="root">
+    <UserControl.Resources>
+        <Style TargetType="Border">
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                    <Setter Property="BorderBrush" Value="#2563EB"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Button Command="{Binding SelectCommand}"
+            CommandParameter="{Binding}"
+            Background="Transparent"
+            BorderThickness="0"
+            Padding="0">
+        <Border Background="White"
+                CornerRadius="14"
+                Padding="16"
+                Margin="10">
+            <StackPanel>
+                <TextBlock Text="{Binding DataContext.Title, ElementName=root}"
+                           FontSize="16"
+                           FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding DataContext.Value, ElementName=root}" 
+                           FontSize="28"
+                           Margin="0,6"/>
+                <Border Width="75"
+                        Height="30"
+                        Background="{Binding DataContext.StatusColor, ElementName=root}"
+                        CornerRadius="16">
+                    <TextBlock Text="{Binding DataContext.Status, ElementName=root}" 
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </Border>
+            </StackPanel>
+        </Border>
+    </Button>
+</UserControl>
