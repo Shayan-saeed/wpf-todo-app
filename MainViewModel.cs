@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace WPFDemo
 {
@@ -26,106 +27,154 @@ namespace WPFDemo
 
     public class MainViewModel : INotifyPropertyChanged
     {
-        public class TaskItem
+        public ObservableCollection<StatCardsViewModel> Cards { get; }
+        private StatCardsViewModel _selectedCards;
+        public StatCardsViewModel SelectedCards
         {
-            public required string Title { get; set; }
-            public bool IsCompleted { get; set; }
-        }
-
-        public ObservableCollection<TaskItem> Tasks { get; }
-            = new ObservableCollection<TaskItem>();
-
-        private readonly ICollectionView _tasksView;
-        public ICollectionView TasksView => _tasksView;
-
-        private string _newItemText;
-        public string NewItemText
-        {
-            get => _newItemText;
-            set {
-                _newItemText = value;
-                OnPropertyChanged(nameof(NewItemText));
+            get => _selectedCards;
+            set
+            {
+                _selectedCards = value;
+                OnPropertyChanged(nameof(SelectedCards));
             }
         }
 
-        public ICommand AddItemCommand { get; }
-        public ICommand DeleteCompletedCommand { get; }
-        public ICommand ShowAllCommand { get; }
-        public ICommand ShowActiveCommand { get; }
-        public ICommand ShowCompletedCommand { get; }
-        
+        //private double _someAngle;
+        //public double SomeAngle
+        //{
+        //    get => _someAngle;
+        //    set { _someAngle = value; OnPropertyChanged(nameof(SomeAngle)); }
+        //}
+
+        //public class TaskItem
+        //{
+        //    public required string Title { get; set; }
+        //    public bool IsCompleted { get; set; }
+        //}
+
+        //public ObservableCollection<TaskItem> Tasks { get; }
+        //    = new ObservableCollection<TaskItem>();
+
+        //private readonly ICollectionView _tasksView;
+        //public ICollectionView TasksView => _tasksView;
+
+        //private string _newItemText;
+        //public string NewItemText
+        //{
+        //    get => _newItemText;
+        //    set {
+        //        _newItemText = value;
+        //        OnPropertyChanged(nameof(NewItemText));
+        //    }
+        //}
+
+        //public ICommand AddItemCommand { get; }
+        //public ICommand DeleteCompletedCommand { get; }
+        //public ICommand ShowAllCommand { get; }
+        //public ICommand ShowActiveCommand { get; }
+        //public ICommand ShowCompletedCommand { get; }
+        public ICommand CardSelectedCommand { get; }
+
         public MainViewModel()
         {
-            AddItemCommand = new RelayCommand(AddItem);
-            DeleteCompletedCommand = new RelayCommand(RemoveItems);
-            ShowAllCommand = new RelayCommand(ShowAll);
-            ShowActiveCommand = new RelayCommand(ShowActive);
-            ShowCompletedCommand = new RelayCommand(ShowCompleted);
-            _tasksView = CollectionViewSource.GetDefaultView(Tasks);
-            _tasksView.Filter = FilterTasks;
-        }
-
-        private void AddItem()
-        {
-            if (!string.IsNullOrWhiteSpace(NewItemText))
+            //AddItemCommand = new RelayCommand(AddItem);
+            //DeleteCompletedCommand = new RelayCommand(RemoveItems);
+            //ShowAllCommand = new RelayCommand(ShowAll);
+            //ShowActiveCommand = new RelayCommand(ShowActive);
+            //ShowCompletedCommand = new RelayCommand(ShowCompleted);
+            //_tasksView = CollectionViewSource.GetDefaultView(Tasks);
+            //_tasksView.Filter = FilterTasks;
+            CardSelectedCommand = new RelayCommand<StatCardsViewModel>(card =>
             {
-                Tasks.Add(new TaskItem { Title= NewItemText, IsCompleted = false});
-                NewItemText = "";
-
-            }
+                SelectedCards = card;
+            });
+            Cards =
+            [
+                new(CardSelectedCommand)
+                {
+                    Title = "Users",
+                    Value = 124,
+                    Status = "OK",
+                    StatusColor = Brushes.Green
+                },
+                new(CardSelectedCommand)
+                {
+                    Title = "Orders",
+                    Value = 32,
+                    Status = "Pending",
+                    StatusColor = Brushes.Gold
+                },
+                new(CardSelectedCommand)
+                {
+                    Title = "Errors",
+                    Value = 5,
+                    Status = "Critical",
+                    StatusColor = Brushes.Red
+                }
+            ];
         }
 
-        private enum FilterMode
-        {
-            All,
-            Active,
-            Completed
-        }
+        //private void AddItem()
+        //{
+        //    if (!string.IsNullOrWhiteSpace(NewItemText))
+        //    {
+        //        Tasks.Add(new TaskItem { Title= NewItemText, IsCompleted = false});
+        //        NewItemText = "";
 
-        private FilterMode _currentFilter = FilterMode.All;
+        //    }
+        //}
 
-        private bool FilterTasks(object obj)
-        {
-            if (obj is not TaskItem task)
-                return false;
+        //private enum FilterMode
+        //{
+        //    All,
+        //    Active,
+        //    Completed
+        //}
 
-            return _currentFilter switch
-            {
-                FilterMode.All => true,
-                FilterMode.Active => !task.IsCompleted,
-                FilterMode.Completed => task.IsCompleted,
-                _ => true
-            };
-        }
+        //private FilterMode _currentFilter = FilterMode.All;
 
-        private void RemoveItems()
-        {
-            if (Tasks.Count > 0) {
-                Tasks.RemoveAll(t => t.IsCompleted);
-            }
-            else
-            {
-                MessageBox.Show("No items to delete.");
-            }
-        }
+        //private bool FilterTasks(object obj)
+        //{
+        //    if (obj is not TaskItem task)
+        //        return false;
 
-        private void ShowAll()
-        {
-            _currentFilter = FilterMode.All;
-            _tasksView.Refresh();
-        }
+        //    return _currentFilter switch
+        //    {
+        //        FilterMode.All => true,
+        //        FilterMode.Active => !task.IsCompleted,
+        //        FilterMode.Completed => task.IsCompleted,
+        //        _ => true
+        //    };
+        //}
 
-        private void ShowActive()
-        {
-            _currentFilter = FilterMode.Active;
-            _tasksView.Refresh();
-        }
+        //private void RemoveItems()
+        //{
+        //    if (Tasks.Count > 0) {
+        //        Tasks.RemoveAll(t => t.IsCompleted);
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("No items to delete.");
+        //    }
+        //}
 
-        private void ShowCompleted()
-        {
-            _currentFilter = FilterMode.Completed;
-            _tasksView.Refresh();
-        }
+        //private void ShowAll()
+        //{
+        //    _currentFilter = FilterMode.All;
+        //    _tasksView.Refresh();
+        //}
+
+        //private void ShowActive()
+        //{
+        //    _currentFilter = FilterMode.Active;
+        //    _tasksView.Refresh();
+        //}
+
+        //private void ShowCompleted()
+        //{
+        //    _currentFilter = FilterMode.Completed;
+        //    _tasksView.Refresh();
+        //}
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string name) =>        
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
